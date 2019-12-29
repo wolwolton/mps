@@ -2,6 +2,7 @@
 #include <iostream>
 #include "particle.h"
 #include "mk_particle.h"
+#include "export.h"
 
 /*
 class Mps{
@@ -18,10 +19,8 @@ class Mps{
 int main(){
     std::vector<Particle> pcls;
     MakeParticle mk_pcls;
+    Export ex;
     mk_pcls.make_bar(pcls);
-    for(auto pcl : pcls){
-        std::cout << pcl.typ << ",";
-    }
-    std::cout << std::endl;
+    ex.exportPara("tst.vtu",pcls);
     return 0;
 }
