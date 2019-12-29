@@ -34,7 +34,7 @@ int Export::exportPara(const std::string name, const std::vector<Particle> &pcls
     ofs << "</DataArray>" << std::endl;
     ofs << "<DataArray NumberOfComponents='1' type='Float32' Name='pressure' format='ascii'>" << std::endl;
     for(auto pcl  : pcls){
-        ofs << pcl.prr;
+        ofs << pcl.prr << std::endl;
     }
     ofs << "</DataArray>" << std::endl;
     ofs << "</PointData>" << std::endl;
