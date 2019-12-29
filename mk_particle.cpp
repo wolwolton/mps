@@ -28,7 +28,7 @@ void MakeParticle::make_bar(std::vector<Particle> &pcls){
         for(int iy=0; iy<40; iy++){
             for(int iz=0; iz<70; iz++){
                 int typ_tmp = Particle::GST;
-                if(3<ix && ix < 9 && 3<iy && iy<9 && 3<iz && iz < 50){
+                if(3<ix && ix < 14 && 3<iy && iy<35 && 3<iz && iz < 50){
                     typ_tmp = Particle::FLD;
                 }
                 if(iz<4 || (iz<50 && (ix<4 || 95<ix || iy<4 || 35<iy))){
