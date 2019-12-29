@@ -31,10 +31,10 @@ void MakeParticle::make_bar(std::vector<Particle> &pcls){
                 if(3<ix && ix < 95 && 3<iy && iy<35 && 3<iz && iz < 50){
                     typ_tmp = Particle::FLD;
                 }
-                if((ix<4 || 95<ix) && (iy<4 || 35<iy) && (iz<4 || iz < 50)){
+                if((ix<4 || 95<ix) || (iy<4 || 35<iy) || (iz<4 || iz < 50)){
                     typ_tmp = Particle::DMY;
                 }
-                if((ix<2 || 97<ix) && (iy<2 || 37<iy) && (iz<2 || iz < 50)){
+                if((ix<2 || 97<ix) || (iy<2 || 37<iy) || (iz<2 || iz < 50)){
                     typ_tmp = Particle::WLL;
                 }
                 pcls[ix*40*70+iy*70+iz].typ=typ_tmp;
