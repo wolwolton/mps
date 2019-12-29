@@ -51,7 +51,7 @@ int Export::exportPara(const std::string name, const std::vector<Particle> &pcls
     ofs << "</DataArray>" << std::endl;
     ofs << "<DataArray type='UInt8' Name='types' format='ascii'>" << std::endl;
     for(int i=0;i<pcls_count; i++){
-        ofs << i << std::endl;
+        ofs << 1 << std::endl;
     }
     ofs << "</DataArray>" << std::endl;
     ofs << "</Cells>" << std::endl;
