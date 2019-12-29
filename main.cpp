@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 #include "mps.h"
 #include "particle.h"
 #include "mk_particle.h"
@@ -7,8 +8,13 @@
 int main(){
     std::vector<Particle> pcls;
     MakeParticle mk_pcls;
-    Export ex;
     mk_pcls.make_bar(pcls);
-    ex.exportPara("tst.vtu",pcls);
+    Export ex;
+    Mps mps(pcls);
+    mps.setDt(1e-2);
+    mps.setMaxTime(1e-1);
+    mps.setName("./output/tst1_");
+    ex.exportPara("tst2.vtu", pcls);
+    mps.run();
     return 0;
 }

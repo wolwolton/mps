@@ -11,4 +11,4 @@ mk_particle.o: mk_particle.cpp
 export.o: export.cpp
 	g++ -Wall -c export.cpp -I /usr/include/eigen3/
 clean:
-	rm -f *.o mps
+	rm -f *.o main

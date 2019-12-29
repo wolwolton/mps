@@ -7,6 +7,7 @@ int Export::exportPara(const std::string name, const std::vector<Particle> &pcls
     std::ofstream ofs(name);
     if (!ofs)
     {
+        ofs.close();
         return -1;
     }
     int pcls_count = pcls.size();
@@ -17,24 +18,24 @@ int Export::exportPara(const std::string name, const std::vector<Particle> &pcls
     ofs << "<Points>" << std::endl;
     ofs << "<DataArray NumberOfComponents='3' type='Float32' Name='Position' format='ascii'>" << std::endl;
     for(auto pcl : pcls){
-        ofs << pcl.pos.x() << " " << pcl.pos.y() << " " << pcl.pos.z() << std::endl;
+        ofs << pcl.pos().x() << " " << pcl.pos().y() << " " << pcl.pos().z() << std::endl;
     }
     ofs << "</DataArray>" << std::endl;
     ofs << "</Points>" << std::endl;
     ofs << "<PointData>" << std::endl;
     ofs << "<DataArray NumberOfComponents='1' type='Int32' Name='ParticleType' format='ascii'>" << std::endl;
     for(auto pcl : pcls){
-        ofs << pcl.typ << std::endl;
+        ofs << pcl.typ() << std::endl;
     }
     ofs << "</DataArray>" << std::endl;
     ofs << "<DataArray NumberOfComponents='1' type='Float32' Name='Velocity' format='ascii'>" << std::endl;
     for(auto pcl  : pcls){
-        ofs << pcl.vel.norm() << std::endl;
+        ofs << pcl.vel().norm() << std::endl;
     }
     ofs << "</DataArray>" << std::endl;
     ofs << "<DataArray NumberOfComponents='1' type='Float32' Name='pressure' format='ascii'>" << std::endl;
     for(auto pcl  : pcls){
-        ofs << pcl.prr << std::endl;
+        ofs << pcl.prr() << std::endl;
     }
     ofs << "</DataArray>" << std::endl;
     ofs << "</PointData>" << std::endl;
@@ -60,4 +61,10 @@ int Export::exportPara(const std::string name, const std::vector<Particle> &pcls
     ofs << "</VTKFile>" << std::endl; 
     ofs.close();
     return 0;
+}
+
+int Export::exportPara(const std::string name,int i, const std::vector<Particle> &pcls){
+    std::string fname = name+std::to_string(i)+".vtu";
+    std::cout<<fname<<std::endl;
+    return exportPara(fname,pcls);
 }
