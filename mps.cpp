@@ -29,6 +29,10 @@ float Mps::w(const Eigen::Vector3f &a, const Eigen::Vector3f &b){
     }
 }
 
+float Mps::w(const Particle &a, const Particle &b){
+    return w(a.pos,b.pos);
+}
+
 void Mps::setDt(float t){
     dt = t;
 }
@@ -62,7 +66,7 @@ void Mps::calcN_0(const Particle& pcl1){
     float n = 0;
     for(auto &pcl2 : pcls){
         if(pcl1!=pcl2){
-            n += w(pcl1.pos,pcl2.pos);
+            n += w(pcl1,pcl2);
         }
     }
     n_0 = n;
@@ -72,7 +76,7 @@ void Mps::calcLambda_0(const Particle& pcl1){
     float l = 0;
     for(auto &pcl2: pcls){
         if(pcl1!=pcl2){
-            l += (pcl1.pos-pcl2.pos).norm()*(pcl1.pos-pcl2.pos).norm()*w(pcl1.pos,pcl2.pos);
+            l += (pcl1.pos-pcl2.pos).norm()*(pcl1.pos-pcl2.pos).norm()*w(pcl1,pcl2);
         }
     }
     lambda_0 = l/n_0;
@@ -89,7 +93,7 @@ void Mps::calcViscosity(){
             Eigen::Vector3f a(0.0,0.0,0.0);
             for(auto &pcl2 : pcls){
                 if(pcl2.typ!=Particle::GST){
-                    a+=(pcl1.vel-pcl2.vel)*w(pcl1.pos,pcl2.pos);
+                    a+=(pcl1.vel-pcl2.vel)*w(pcl1,pcl2);
                 } 
             }
             pcl1.acc+=a*2*dim/n_0/lambda_0;

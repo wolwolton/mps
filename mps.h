@@ -31,6 +31,7 @@ class Mps{
         std::string filename;
         Export ex;
         float w(const Eigen::Vector3f &a, const Eigen::Vector3f &b);
+        float w(const Particle &a, const Particle &b);
         void calcGravity();
         void calcViscosity();
         void calcN_0(const Particle& pcl1);
