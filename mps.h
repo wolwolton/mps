@@ -18,6 +18,7 @@ class Mps{
         EIGEN_MAKE_ALIGNED_OPERATOR_NEW
     private:
         const Eigen::Vector3f g;
+        const float nu = 1e-6;
         float dt;
         float t;
         float n_0;
@@ -32,7 +33,9 @@ class Mps{
         float w(const Eigen::Vector3f &a, const Eigen::Vector3f &b);
         void calcGravity();
         void calcViscosity();
-        void calcN_0();
+        void calcN_0(const Particle& pcl1);
+        void calcLambda_0(const Particle& pcl1);
+        void calcParameter();
         void moveParticleTmp();
         void calcPressure();
 };

@@ -11,12 +11,12 @@ void MakeParticle::make_bar(std::vector<Particle> &pcls){
         for(int iy=0; iy<20; iy++){
             for(int iz=0; iz<40; iz++){
                 int idx = ix*20*40+iy*40+iz;
-                pcls[idx].updPos(pcl_dist*(Eigen::Vector3f::UnitX()*(float)ix
+                pcls[idx].pos=pcl_dist*(Eigen::Vector3f::UnitX()*(float)ix
                                        +Eigen::Vector3f::UnitY()*(float)iy
-                                       +Eigen::Vector3f::UnitZ()*(float)iz));
-                pcls[idx].updAcc(Eigen::Vector3f::Zero());
-                pcls[idx].updVel(Eigen::Vector3f::Zero());
-                pcls[idx].updPrr(0);
+                                       +Eigen::Vector3f::UnitZ()*(float)iz);
+                pcls[idx].acc=Eigen::Vector3f::Zero();
+                pcls[idx].vel=Eigen::Vector3f::Zero();
+                pcls[idx].prr=0;
             }
         }
     }
@@ -33,7 +33,7 @@ void MakeParticle::make_bar(std::vector<Particle> &pcls){
                 if(iz<2 || (iz<30 && (ix<2 || 67<ix || iy<2 || 17<iy))){
                     typ_tmp = Particle::WLL;
                 }
-                pcls[ix*20*40+iy*40+iz].updTyp(typ_tmp);
+                pcls[ix*20*40+iy*40+iz].typ=typ_tmp;
             }
         }
     }

@@ -6,6 +6,7 @@
 
 Mps::Mps(std::vector<Particle> &p)
 :pcls(p),
+ nu(1e-6),
  dt(0),
  max_time(0),
  dx(0),
@@ -50,25 +51,50 @@ void Mps::setName(std::string name){
 
 void Mps::calcGravity(){
     for(auto &pcl : pcls){
-        if(Particle::FLD == pcl.typ()){
-            pcl.updAcc(g);
-            pcl.updVel(pcl.vel()+g*dt);
+        if(Particle::FLD == pcl.typ){
+            pcl.acc=g;
+            pcl.vel+=g*dt;
         }
     }
 }
 
-void Mps::calcN_0(){
+void Mps::calcN_0(const Particle& pcl1){
     float n = 0;
-    auto& pcl1 = pcls[1000];
     for(auto &pcl2 : pcls){
         if(pcl1!=pcl2){
-            n += w(pcl1.pos(),pcl2.pos());
+            n += w(pcl1.pos,pcl2.pos);
         }
     }
     n_0 = n;
 }
 
+void Mps::calcLambda_0(const Particle& pcl1){
+    float l = 0;
+    for(auto &pcl2: pcls){
+        if(pcl1!=pcl2){
+            l += (pcl1.pos-pcl2.pos).norm()*(pcl1.pos-pcl2.pos).norm()*w(pcl1.pos,pcl2.pos);
+        }
+    }
+    lambda_0 = l/n_0;
+}
+
+void Mps::calcParameter(){
+    calcN_0(pcls[2000]);
+    calcLambda_0(pcls[2000]);
+}
+
 void Mps::calcViscosity(){
+    for(auto &pcl1 : pcls){
+        if(pcl1.typ==Particle::FLD){
+            Eigen::Vector3f a(0.0,0.0,0.0);
+            for(auto &pcl2 : pcls){
+                if(pcl2.typ!=Particle::GST){
+                    a+=(pcl1.vel-pcl2.vel)*w(pcl1.pos,pcl2.pos);
+                } 
+            }
+            pcl1.acc+=a*2*dim/n_0/lambda_0;
+        }
+    }
 }
 
 void Mps::moveParticleTmp(){
@@ -82,8 +108,9 @@ void Mps::calcPressure(){
 void Mps::run(){
     int i=0;
     re = dx*2.1;
-    calcN_0();
+    calcParameter();
     std::cout << "n_0 is" << n_0 << std::endl;
+    std::cout << "lambda_0 is" << lambda_0 << std::endl;
     while(t<max_time){
         std::cout << "calc" << i << std::endl;
         calcGravity();
