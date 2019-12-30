@@ -83,6 +83,7 @@ void Mps::calcLambda_0(const Particle& pcl1){
 }
 
 void Mps::calcParameter(){
+    re = dx*2.1;
     calcN_0(pcls[2000]);
     calcLambda_0(pcls[2000]);
 }
@@ -102,7 +103,11 @@ void Mps::calcViscosity(){
 }
 
 void Mps::moveParticleTmp(){
-
+    for(auto& pcl : pcls){
+        pcl.vel += pcl.acc*dt;
+        pcl.pos += pcl.vel*dt;
+        pcl.acc = Eigen::Vector3f::Zero();
+    }
 }
 
 void Mps::calcPressure(){
@@ -111,10 +116,7 @@ void Mps::calcPressure(){
 
 void Mps::run(){
     int i=0;
-    re = dx*2.1;
     calcParameter();
-    std::cout << "n_0 is" << n_0 << std::endl;
-    std::cout << "lambda_0 is" << lambda_0 << std::endl;
     while(t<max_time){
         std::cout << "calc" << i << std::endl;
         calcGravity();
