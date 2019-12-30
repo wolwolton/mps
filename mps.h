@@ -12,18 +12,28 @@ class Mps{
         void run();
         void setDt(float t);
         void setMaxTime(float t);
+        void setDx(float dx);
+        void setDimension(int d);
         void setName(std::string name);
         EIGEN_MAKE_ALIGNED_OPERATOR_NEW
     private:
-        Export ex;
         const Eigen::Vector3f g;
         float dt;
         float t;
+        float n_0;
+        float lambda_0;
+        float re;
+        float dx;
         float max_time;
+        int dim;
         std::vector<Particle> pcls;
         std::string filename;
+        Export ex;
+        float w(const Eigen::Vector3f &a, const Eigen::Vector3f &b);
         void calcGravity();
         void calcViscosity();
+        void calcN_0();
+        void moveParticleTmp();
         void calcPressure();
 };
 

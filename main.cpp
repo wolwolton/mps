@@ -13,6 +13,8 @@ int main(){
     Mps mps(pcls);
     mps.setDt(1e-2);
     mps.setMaxTime(1e-1);
+    mps.setDx(0.025);
+    mps.setDimension(3);
     mps.setName("./output/tst1_");
     ex.exportPara("tst2.vtu", pcls);
     mps.run();

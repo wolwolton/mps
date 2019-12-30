@@ -28,3 +28,6 @@ class Particle
         const int typ() const;
         const float prr() const;
 };
+
+inline bool operator==(const Particle& lhs, const Particle& rhs){return (&lhs==&rhs); }
+inline bool operator!=(const Particle& lhs, const Particle& rhs){ return !(lhs == rhs); }
