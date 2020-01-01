@@ -28,10 +28,10 @@ void MakeParticle::make_bar(std::vector<Particle> &pcls){
                     typ_tmp = Particle::FLD;
                 }
                 if(iz<4 || (iz<30 && (ix<4 || 65<ix ))){
-                    typ_tmp = Particle::DMY;
+                    typ_tmp = Particle::WLL;
                 }
                 if(iz<2 || (iz<30 && (ix<2 || 67<ix ))){
-                    typ_tmp = Particle::WLL;
+                    typ_tmp = Particle::DMY;
                 }
                 pcls[ix*1*40+iy*40+iz].typ=typ_tmp;
             }
