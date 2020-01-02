@@ -11,11 +11,11 @@ int main(){
     mk_pcls.make_bar(pcls);
     Export ex;
     Mps mps(pcls);
-    mps.setDt(1e-2);
-    mps.setMaxTime(1e-1);
+    mps.setDt(1e-3);
+    mps.setMaxTime(2e-1);
     mps.setDx(0.025);
-    mps.setDimension(3);
-    mps.setName("./output2/tst1_");
+    mps.setDimension(2);
+    mps.setName("./output3/tst1_");
     ex.exportPara("tst2.vtu", pcls);
     mps.run();
     return 0;
