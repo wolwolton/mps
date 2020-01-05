@@ -3,10 +3,11 @@
 #include <Eigen/IterativeLinearSolvers>
 #include <vector>
 #include <iostream>
+#include <fstream>
 #include "particle.h"
 #include "mps.h"
 
-Mps::Mps(std::vector<Particle> &p)
+Mps::Mps(std::vector<std::unique_pyrParticle> &p)
 :pcls(p),
  nu(1e-6),
  dt(0),
@@ -14,7 +15,7 @@ Mps::Mps(std::vector<Particle> &p)
  dx(0),
  dim(0),
  t(0),
- g(0.0f,0.0f,-9.8f),
+ g(0.0d,0.0d,-9.8d),
  n_0(0),
  lambda_0(0),
  re(0),
@@ -22,34 +23,35 @@ Mps::Mps(std::vector<Particle> &p)
  filename()
 {}
 
-float Mps::w(const Eigen::Vector3f &a, const Eigen::Vector3f &b){
-    float r = (a-b).norm();
-    if(r>re){
-        return re/r -1;
+double Mps::w(const Eigen::Vector3d &a, const Eigen::Vector3d &b){
+    double r = (a-b).norm();
+    if(re>r){
+        return re/r -1.0;
     }else{
         return 0;
     }
 }
 
-float Mps::w(const Particle &a, const Particle &b){
+double Mps::w(const Particle &a, const Particle &b){
     return w(a.pos,b.pos);
 }
 
-float Mps::w(const Eigen::Vector3f &a, const Eigen::Vector3f &b, float re_tmp){
-    float r = (a-b).norm();
-    if(r>re_tmp){
-        return re_tmp/r -1;
+double Mps::w(const Eigen::Vector3d &a, const Eigen::Vector3d &b, double re_tmp){
+    double r = (a-b).norm();
+    if(re_tmp>r){
+        return re_tmp/r -1.0;
     }else{
         return 0;
     }
 }
 
-float Mps::w(const Particle &a, const Particle &b, float re_tmp){
+double Mps::w(const Particle &a, const Particle &b, double re_tmp){
     return w(a.pos,b.pos,re_tmp);
 }
 
-float Mps::n_d(Particle &pcl){
-    float n = 0;
+double Mps::n_d(Particle &pcl){
+    double n = 0;
+    if(pcl.typ==Particle::GST)return n;
     for(auto &pcl1 : pcls){
         if(pcl1 != pcl && pcl1.typ!=Particle::GST){
             n += w(pcl1,pcl);
@@ -58,15 +60,15 @@ float Mps::n_d(Particle &pcl){
     return n;
 }
 
-void Mps::setDt(float t){
+void Mps::setDt(double t){
     dt = t;
 }
 
-void Mps::setMaxTime(float t){
+void Mps::setMaxTime(double t){
     max_time = t;
 }
 
-void Mps::setDx(float x){
+void Mps::setDx(double x){
     dx = x;
 }
 
@@ -82,63 +84,71 @@ void Mps::calcGravity(){
     for(auto &pcl : pcls){
         if(Particle::FLD == pcl.typ){
             pcl.acc=g;
+        }else{
+            pcl.acc=Eigen::Vector3d::Zero();
         }
     }
 }
 
 void Mps::calcN_0(const Particle& pcl1){
-    float n = 0;
+    double n = 0;
+    double n_lap = 0;
     for(auto &pcl2 : pcls){
         if(pcl1!=pcl2){
-            n += w(pcl1,pcl2);
+            n += w(pcl1,pcl2,dx*2.1);
+            n_lap += w(pcl1,pcl2,dx*3.1);
         }
     }
     n_0 = n;
+    n_0_lap=n_lap;
+    
 }
 
 void Mps::calcLambda_0(const Particle& pcl1){
-    float l = 0;
+    double l = 0;
     for(auto &pcl2: pcls){
         if(pcl1!=pcl2){
-            l += (pcl1.pos-pcl2.pos).norm()*(pcl1.pos-pcl2.pos).norm()*w(pcl1,pcl2);
+            l += (pcl1.pos-pcl2.pos).norm()*(pcl1.pos-pcl2.pos).norm()*w(pcl1,pcl2,dx*3.1);
         }
     }
     lambda_0 = l/n_0;
 }
 
 void Mps::calcParameter(){
-    Eigen::Vector3f sum(0.0, 0.0, 0.0);
+    Eigen::Vector3d sum(Eigen::Vector3d::Zero());
     int i = 0;
-    for(auto &pcl : pcls){
+    for(Particle &pcl : pcls){
         if(pcl.typ==Particle::FLD){
             sum += pcl.pos;
             i++;
         }
     }
-    Eigen::Vector3f center = sum/i;
-    float min = 100000;
+    Eigen::Vector3d center = sum/i;
+    double min = 100000;
     int min_idx = 0;
     for(int k=0; k<pcls.size(); k++){
         if(min>(pcls[k].pos-center).norm()){
             min_idx=k;
         }
     }
-    re = dx*3.1;
+    re = dx*2.1;
     calcN_0(pcls[min_idx]);
     calcLambda_0(pcls[min_idx]);
     std::cout<<"SAMPLE PARTICLE NUM:"<<min_idx<<std::endl;
+    std::cout<<"N_0:"<<n_0<<std::endl;
+    std::cout<<"lambda:"<<lambda_0<<std::endl;
 }
 
 void Mps::calcViscosity(){
     for(auto &pcl1 : pcls){
         if(pcl1.typ==Particle::FLD){
-            Eigen::Vector3f a(0.0,0.0,0.0);
+            Eigen::Vector3d a(Eigen::Vector3d::Zero());
             for(auto &pcl2 : pcls){
-                if(pcl2.typ!=Particle::GST){
-                    a+=(pcl2.vel-pcl1.vel)*w(pcl1,pcl2);
+                if(pcl2.typ!=Particle::GST && pcl2!=pcl1){
+                    a+=(pcl2.vel-pcl1.vel)*w(pcl1,pcl2,dx*3.1);
                 } 
             }
-            pcl1.acc+=a*2.0*(float)dim/n_0/lambda_0;
+            pcl1.acc+=nu*2.0*(double)dim/(n_0_lap*lambda_0)*a;
         }
     }
 }
@@ -148,64 +158,73 @@ void Mps::moveParticle(){
         if(pcl.typ == Particle::FLD){
             pcl.vel += pcl.acc*dt;
             pcl.pos += pcl.vel*dt;
-            pcl.acc = Eigen::Vector3f::Zero();
+            pcl.acc = Eigen::Vector3d::Zero();
+        }else{
+            pcl.acc = Eigen::Vector3d::Zero();
         }
     }
 }
 
-void Mps::setBoundaryCondition(std::vector<int> &clc_idx, std::vector<int> &prr_defined_idx){
-    int k = 0;
-    for(int k=0; k<pcls.size(); k++){
-        switch(pcls[k].typ){
+void Mps::setBoundaryCondition(){
+    for(auto &pcl : pcls){
+        switch(pcl.typ){
             case Particle::DMY:
-                continue;
+                pcl.b_c = GST_DMY;
                 break;
             case Particle::GST:
-                continue;
+                pcl.b_c = GST_DMY;
                 break;
             case Particle::FLD:
-                if(n_d(pcls[k])>n_0*beta){
-                    clc_idx.push_back(k);
+                if(n_d(pcl)<n_0*beta){
+                    pcl.b_c = OUTR_FLD;
                 }
-                prr_defined_idx.push_back(k);
+                pcl.b_c = INER_FLD;
+                break;
+            case Particle::WLL:
+                if(n_d(pcl)<n_0*beta){
+                    pcl.b_c = OUTR_FLD;
+                }
+                pcl.b_c = INER_FLD;
                 break;
             default:
-                clc_idx.push_back(k);
-                prr_defined_idx.push_back(k);
+                pcl.b_c = INER_FLD;
                 break;
         }
     }
 }
 
-void Mps::calcA(Eigen::SparseMatrix<float, Eigen::RowMajor, int64_t> &M, std::vector<int> &clc_idx){
-    int k = 0;
-    for(auto &i : clc_idx){
+void Mps::calcA(Eigen::SparseMatrix<double, Eigen::RowMajor, int64_t> &M){
+    int k = -1;
+    for(auto &pcl1 : pcls){
+        k++;
         M.startVec(k);
-        int l = 0;
-        for(auto &j : clc_idx){
+        if(pcl1.b_c!=INER_FLD)continue;
+        int l = -1;
+        for(auto &pcl2 : pcls){
+            l++;
+            if(pcl2.b_c==GST_DMY)continue;//pass loop
             if(k==l){
-                float w_sum = 0;
-                for(auto &j2 : clc_idx){
-                    if(j2!=j){
-                        w_sum += w(pcls[j],pcls[j2],dx*3.1);
+                double sum = 0;
+                for(auto &pcl3 : pcls){
+                    if(pcl2!=pcl3 && pcl3.b_c!=GST_DMY){
+                        sum += (-1)*w(pcl1,pcl3,dx*3.1) * (2.0*(double)dim/(lambda_0*n_0)) / rho;
                     }
                 }
-                M.insertBack(k,k) = 1.0/rho*2.0*(float)dim/(lambda_0*n_0)*w_sum + compressibility/(dt*dt);
+                M.insertBack(k,k) = sum + compressibility/(dt*dt);
             }
             else{
-                M.insertBack(k,l) = -1.0/rho*2.0*(float)dim/(lambda_0*n_0)*w(pcls[i],pcls[j],dx*3.1);
+                M.insertBack(k,l) = -1.0/rho*(2.0*(double)dim/(lambda_0*n_0))*w(pcl1,pcl2,dx*3.1);
             }
-            l++;
         }
-        k++;
     }
     M.finalize();
 }
 
-void Mps::calcb(Eigen::VectorXf &v, std::vector<int> &clc_idx){
+void Mps::calcb(Eigen::VectorXd &v){
     int k = 0;
-    for(auto &i : clc_idx){
-        v(k)=gamma*1.0/(dt*dt)*(n_d(pcls[i])-n_0)/n_0;
+    for(auto &pcl : pcls){
+        if(pcl.b_c==INER_FLD)v(k)=gamma*(1.0/(dt*dt))*((n_d(pcl)-n_0)/n_0);
+        else v(k)=0;
         k++;
     }
 }
@@ -218,20 +237,22 @@ void Mps::removeNegativePressure(){
     }
 }
 
-void Mps::calcPressureGrad( std::vector<int> &prr_defined_idx){
-    for(auto &i : prr_defined_idx){
-        float minprr = pcls[i].prr;
-        for(auto &j : prr_defined_idx){
-            if(minprr > pcls[j].prr && w(pcls[i],pcls[j])>0){
-                minprr = pcls[j].prr;
+void Mps::calcPressureGrad(){
+    for(auto &pcl : pcls){
+        if(pcl.b_c!=Particle::FLD)continue;
+        double minprr = pcl.prr;
+        for(auto &pcl2 : pcls){
+            if(pcl.b_c!=GST_DMY && pcl!=pcl2 && minprr > pcl.prr && w(pcl,pcl2)>0){
+                minprr = pcl2.prr;
             }
         }
-        pcls[i].acc = Eigen::Vector3f::Zero();
-        for(auto &j : prr_defined_idx){
-            if(pcls[i] != pcls[j] && pcls[i].pos!=pcls[j].pos){
-                pcls[i].acc += -1.0*(float)dim/(rho*n_0)*(pcls[j].prr-minprr)
-                            /((pcls[i].pos-pcls[j].pos).norm()*(pcls[i].pos-pcls[j].pos).norm())
-                            *(pcls[j].pos-pcls[i].pos)*w(pcls[i],pcls[j]);
+        pcl.acc = Eigen::Vector3d::Zero();
+        for(auto &pcl2 : pcls){
+            if(pcl!=pcl2 && pcl.pos!=pcl2.pos && pcl.b_c!=GST_DMY){
+                double dist = (pcl2.pos-pcl.pos).norm();
+                pcl.acc += -1.0*(pcl2.pos-pcl.pos)
+                                    *((double)dim/(rho*n_0))*(pcl2.prr-minprr)*w(pcl,pcl2)
+                                /(dist*dist);
             }
         }
     }
@@ -242,62 +263,62 @@ void Mps::fixParticlePosition(){
         if(pcl.typ == Particle::FLD){
             pcl.vel += pcl.acc*dt;
             pcl.pos += pcl.acc*dt*dt;
-            pcl.acc = Eigen::Vector3f::Zero();
+            pcl.acc = Eigen::Vector3d::Zero();
+        }else{
+            pcl.acc = Eigen::Vector3d::Zero();
         }
     }
 }
 
 void Mps::calcPressure(){
     std::cout << "SOLVING" << std::endl;
-    std::vector<int> clc_idx;
-    std::vector<int> prr_defined_idx;
-    setBoundaryCondition(clc_idx,prr_defined_idx);
-    int n = clc_idx.size();
-    Eigen::SparseMatrix<float, Eigen::RowMajor, int64_t> A(n,n);
-    Eigen::VectorXf b(n);
-    calcA(A,clc_idx);
-    calcb(b,clc_idx);
+    setBoundaryCondition();
+    int n = pcls.size();
+    Eigen::SparseMatrix<double, Eigen::RowMajor, int64_t> A(n,n);
+    Eigen::VectorXd b(n);
+    calcA(A);
+    calcb(b);
     std::cout << "success calcA calcB" << std::endl;
     
-    Eigen::BiCGSTAB<Eigen::SparseMatrix<float>> solver;
+    Eigen::BiCGSTAB<Eigen::SparseMatrix<double>> solver;
     solver.compute(A);
-    std::cout << "success compute" << std::endl;
     if(solver.info()!=Eigen::Success) {
         std::cout<<"solver error" << std::endl;
         return;
     }
-    auto x = solver.solve(b);
+    Eigen::VectorXd x(n);
+    x = solver.solve(b);
     if(solver.info()!=Eigen::Success) {
         std::cout<<"solving failed" << std::endl;
         return;
     }
     int k = 0;
-    int l = 0;
-    
-    while(k<pcls.size()){
-        pcls[k].prr = 0;
-        if(l<clc_idx.size() && k==clc_idx[l]){
-            pcls[k].prr = x[l];
-            l++;
-        }
-        k++;
+    for(int k = 0; k<pcls.size(); k++){
+        pcls[k].prr = x[k];
     }
     removeNegativePressure();
-    calcPressureGrad(prr_defined_idx);
+    calcPressureGrad();
     fixParticlePosition();
+    std::cout << "success compute" << std::endl;
 }
 
 void Mps::run(){
     int i=0;
+    int k=0;
+    std::cout<<pcls[0].pos.z()<<std::endl;
     calcParameter();
+    ex.exportPara(filename,k, pcls);
+    k++;
     while(t<max_time){
         std::cout << "calc" << i << std::endl;
         calcGravity();
         calcViscosity();
         moveParticle();
         calcPressure();
-        moveParticle();
-        ex.exportPara(filename,i, pcls);
+        if(i%20==0){
+            ex.exportPara(filename,k, pcls);
+            k++;
+        }
         i++;
         t+=dt;
     }

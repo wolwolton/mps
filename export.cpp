@@ -17,6 +17,7 @@ int Export::exportPara(const std::string name, const std::vector<Particle> &pcls
     ofs << "<Piece NumberOfCells='"<< pcls_count << "' NumberOfPoints='" << pcls_count << "'>"<<  std::endl;
     ofs << "<Points>" << std::endl;
     ofs << "<DataArray NumberOfComponents='3' type='Float32' Name='Position' format='ascii'>" << std::endl;
+
     for(auto pcl : pcls){
         ofs << pcl.pos.x() << " " << pcl.pos.y() << " " << pcl.pos.z() << std::endl;
     }
@@ -30,12 +31,12 @@ int Export::exportPara(const std::string name, const std::vector<Particle> &pcls
     ofs << "</DataArray>" << std::endl;
     ofs << "<DataArray NumberOfComponents='1' type='Float32' Name='Velocity' format='ascii'>" << std::endl;
     for(auto pcl  : pcls){
-        ofs << pcl.vel.norm() << std::endl;
+        ofs << (float)pcl.vel.norm() << std::endl;
     }
     ofs << "</DataArray>" << std::endl;
     ofs << "<DataArray NumberOfComponents='1' type='Float32' Name='pressure' format='ascii'>" << std::endl;
     for(auto pcl  : pcls){
-        ofs << pcl.prr << std::endl;
+        ofs << (float)pcl.prr << std::endl;
     }
     ofs << "</DataArray>" << std::endl;
     ofs << "</PointData>" << std::endl;
@@ -47,7 +48,7 @@ int Export::exportPara(const std::string name, const std::vector<Particle> &pcls
     ofs << "</DataArray>" << std::endl;
     ofs << "<DataArray type='Int32' Name='offsets' format='ascii'>" << std::endl;
     for(int i=0;i<pcls_count; i++){
-        ofs << i << std::endl;
+        ofs << i+1 << std::endl;
     }
     ofs << "</DataArray>" << std::endl;
     ofs << "<DataArray type='UInt8' Name='types' format='ascii'>" << std::endl;

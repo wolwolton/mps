@@ -6,16 +6,16 @@
 void MakeParticle::make_bar(std::vector<Particle> &pcls){
     std::vector<Particle> pcls_tmp(70*30);
     pcls = pcls_tmp;
-    float pcl_dist = 0.025;
+    double pcl_dist = 0.025;
     for(int ix=0; ix<70; ix++){
         for(int iy=0; iy<1; iy++){
             for(int iz=0; iz<30; iz++){
                 int idx = ix*1*30+iy*30+iz;
-                pcls[idx].pos=pcl_dist*(Eigen::Vector3f::UnitX()*(float)ix
-                                       +Eigen::Vector3f::UnitY()*(float)iy
-                                       +Eigen::Vector3f::UnitZ()*(float)iz);
-                pcls[idx].acc=Eigen::Vector3f::Zero();
-                pcls[idx].vel=Eigen::Vector3f::Zero();
+                pcls[idx].pos=pcl_dist*(Eigen::Vector3d::UnitX()*(double)ix
+                                       +Eigen::Vector3d::UnitY()*(double)iy
+                                       +Eigen::Vector3d::UnitZ()*(double)iz);
+                pcls[idx].acc=Eigen::Vector3d::Zero();
+                pcls[idx].vel=Eigen::Vector3d::Zero();
                 pcls[idx].prr=0;
             }
         }
@@ -24,13 +24,13 @@ void MakeParticle::make_bar(std::vector<Particle> &pcls){
         for(int iy=0; iy<1; iy++){
             for(int iz=0; iz<30; iz++){
                 int typ_tmp = Particle::GST;
-                if(7<ix && ix < 14  && 3<iz && iz < 30){
+                if(3<ix && ix < 14  && 3<iz && iz < 30){
                     typ_tmp = Particle::FLD;
                 }
-                if(iz<8 || (iz<30 && (ix<8 || 61<ix ))){
+                if(iz<4 || (iz<30 && (ix<4 || 65<ix ))){
                     typ_tmp = Particle::WLL;
                 }
-                if(iz<4 || (iz<30 && (ix<4 || 65<ix ))){
+                if(iz<2 || (iz<30 && (ix<2 || 67<ix ))){
                     typ_tmp = Particle::DMY;
                 }
                 /*
