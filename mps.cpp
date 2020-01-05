@@ -7,7 +7,7 @@
 #include "particle.h"
 #include "mps.h"
 
-Mps::Mps(std::vector<std::unique_pyrParticle> &p)
+Mps::Mps(std::vector<std::unique_ptr<Particle>> p)
 :pcls(p),
  nu(1e-6),
  dt(0),
@@ -32,7 +32,7 @@ double Mps::w(const Eigen::Vector3d &a, const Eigen::Vector3d &b){
     }
 }
 
-double Mps::w(const Particle &a, const Particle &b){
+double Mps::w(const std::unique_ptr<Particle> a, const std::unique_ptr<Particle> b){
     return w(a.pos,b.pos);
 }
 
@@ -45,11 +45,11 @@ double Mps::w(const Eigen::Vector3d &a, const Eigen::Vector3d &b, double re_tmp)
     }
 }
 
-double Mps::w(const Particle &a, const Particle &b, double re_tmp){
+double Mps::w(const std::unique_ptr<Particle> a, const std::unique_ptr<Particle> b, double re_tmp){
     return w(a.pos,b.pos,re_tmp);
 }
 
-double Mps::n_d(Particle &pcl){
+double Mps::n_d(std::unique_ptr<Particle> pcl){
     double n = 0;
     if(pcl.typ==Particle::GST)return n;
     for(auto &pcl1 : pcls){
@@ -90,7 +90,7 @@ void Mps::calcGravity(){
     }
 }
 
-void Mps::calcN_0(const Particle& pcl1){
+void Mps::calcN_0(const std::unique_ptr<Particle> pcl1){
     double n = 0;
     double n_lap = 0;
     for(auto &pcl2 : pcls){
@@ -104,7 +104,7 @@ void Mps::calcN_0(const Particle& pcl1){
     
 }
 
-void Mps::calcLambda_0(const Particle& pcl1){
+void Mps::calcLambda_0(const std::unique_ptr<Particle> pcl1){
     double l = 0;
     for(auto &pcl2: pcls){
         if(pcl1!=pcl2){

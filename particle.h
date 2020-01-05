@@ -5,8 +5,8 @@
 class Particle
 {
     private:
-        EIGEN_MAKE_ALIGNED_OPERATOR_NEW
     public:
+        EIGEN_MAKE_ALIGNED_OPERATOR_NEW
         Particle();
         Particle(const Particle& rhs);
         const static int GST = -1; 

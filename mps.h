@@ -9,7 +9,7 @@
 
 class Mps{
     public:
-        Mps(std::vector<Particle> &p);
+        Mps(std::vector<std::unique_ptr<Particle>> &p);
         void run();
         void setDt(double t);
         void setMaxTime(double t);
@@ -41,13 +41,13 @@ class Mps{
         Export ex;
         double w(const Eigen::Vector3d &a, const Eigen::Vector3d &b);
         double w(const Eigen::Vector3d &a, const Eigen::Vector3d &b, double re_tmp);
-        double w(const Particle &a, const Particle &b);
-        double w(const Particle &a, const Particle &b, double re_tmp);
-        double n_d(Particle& pcl);
+        double w(const std::unique_ptr<const Particle> a, const std::unique_ptr<const Particle> b);
+        double w(const std::unique_ptr<const Particle> a, const std::unique_ptr<const Particle> b, double re_tmp);
+        double n_d(const std::unique_ptr<const Particle> pcl);
         void calcGravity();
         void calcViscosity();
-        void calcN_0(const Particle& pcl1);
-        void calcLambda_0(const Particle& pcl1);
+        void calcN_0(const std::unique_ptr<const Particle> pcl1);
+        void calcLambda_0(const std::unique_ptr<const Particle> pcl1);
         void calcParameter();
         void moveParticle();
         void setBoundaryCondition();
