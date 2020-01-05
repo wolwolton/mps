@@ -1,11 +1,12 @@
 #include <iostream>
 #include <vector>
 #include <memory>
-//#include "mps.h"
+#include "mps.h"
 #include "particle.h"
 #include "mk_particle.h"
 #include "export.h"
 #include <Eigen/Core>
+/*
 class A{
 public:
     bool flg;
@@ -13,11 +14,13 @@ public:
     A():flg(false), value(0){}
 };
 
-void tst(std::vector<std::unique_ptr<Particle>>& array){
+void tst(const std::vector<std::unique_ptr<const A>>& array){
     for(auto &a: array){
-        std::cout<<a->vel.norm() << std::endl;
+        //a->value++;
+        std::cout<<a->value << std::endl;
     }
 }
+*/
 
 
 int main(){
@@ -43,12 +46,11 @@ int main(){
     A_array.push_back(std::move(p4));  
     tst(A_array);
     */
-    //tst(pcls);
-    
     Export ex;
     ex.exportPara("tst1.vtu", pcls);
+    
+    Mps mps(std::move(pcls));
     /*
-    Mps mps(pcls);
     std::cout<<"TST"<<std::endl;
     mps.setDt((double)1e-3);
     mps.setMaxTime((double)2);

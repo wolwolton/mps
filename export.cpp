@@ -5,7 +5,7 @@
 #include "particle.h"
 #include "export.h"
 
-int Export::exportPara(const std::string name, std::vector<std::unique_ptr<Particle>>& pcls){
+int Export::exportPara(const std::string name, const std::vector<std::unique_ptr<Particle>>& pcls){
     std::ofstream ofs(name);
     if (!ofs)
     {
@@ -65,7 +65,7 @@ int Export::exportPara(const std::string name, std::vector<std::unique_ptr<Parti
     return 0;
 }
 
-int Export::exportPara(const std::string name,int i, std::vector<std::unique_ptr<Particle>>& pcls){
+int Export::exportPara(const std::string name,int i, const std::vector<std::unique_ptr<Particle>>& pcls){
     std::string fname = name+std::to_string(i)+".vtu";
     std::cout<<fname<<std::endl;
     return exportPara(fname,pcls);

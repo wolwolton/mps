@@ -9,14 +9,14 @@
 
 class Mps{
     public:
-        Mps(std::vector<std::unique_ptr<Particle>> &p);
+        EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
+        Mps(std::vector<std::unique_ptr<Particle>> p);
         void run();
         void setDt(double t);
         void setMaxTime(double t);
         void setDx(double dx);
         void setDimension(int d);
         void setName(std::string name);
-        EIGEN_MAKE_ALIGNED_OPERATOR_NEW
     private:
         const static int INER_FLD = 0;
         const static int OUTR_FLD = 1;
@@ -36,18 +36,21 @@ class Mps{
         double dx;
         double max_time;
         int dim;
-        std::vector<Particle> pcls;
+        std::vector<std::unique_ptr<Particle>> pcls;
         std::string filename;
         Export ex;
         double w(const Eigen::Vector3d &a, const Eigen::Vector3d &b);
         double w(const Eigen::Vector3d &a, const Eigen::Vector3d &b, double re_tmp);
-        double w(const std::unique_ptr<const Particle> a, const std::unique_ptr<const Particle> b);
-        double w(const std::unique_ptr<const Particle> a, const std::unique_ptr<const Particle> b, double re_tmp);
-        double n_d(const std::unique_ptr<const Particle> pcl);
+        double w(const Particle &a, const Particle &b);
+        double w(const std::unique_ptr<Particle> &a, const std::unique_ptr<Particle> &b);
+        double w(const Particle &a, const Particle &b, double re_tmp);
+        double w(const std::unique_ptr<Particle> &a, const std::unique_ptr<Particle> &b, double re_tmp);
+        double n_d(const Particle &pcl);
+        double n_d(const std::unique_ptr<Particle> &pcl);
         void calcGravity();
         void calcViscosity();
-        void calcN_0(const std::unique_ptr<const Particle> pcl1);
-        void calcLambda_0(const std::unique_ptr<const Particle> pcl1);
+        void calcN_0(const std::unique_ptr<Particle> &pcl1);
+        void calcLambda_0(const std::unique_ptr<Particle> &pcl1);
         void calcParameter();
         void moveParticle();
         void setBoundaryCondition();

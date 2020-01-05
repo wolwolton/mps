@@ -7,6 +7,6 @@
 class Export
 {
 public:
-    int exportPara(const std::string name, std::vector<std::unique_ptr<Particle>>& pcls);
-    int exportPara(const std::string name, int i, std::vector<std::unique_ptr<Particle>>& pcls);
+    int exportPara(const std::string name, const std::vector<std::unique_ptr<Particle>>& pcls);
+    int exportPara(const std::string name, int i, const std::vector<std::unique_ptr<Particle>>& pcls);
 };
