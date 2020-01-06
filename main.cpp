@@ -50,17 +50,16 @@ int main(){
     ex.exportPara("tst1.vtu", pcls);
     
     Mps mps(std::move(pcls));
-    /*
+    
     std::cout<<"TST"<<std::endl;
     mps.setDt((double)1e-3);
     mps.setMaxTime((double)2);
     mps.setDx((double)0.025);
     mps.setDimension(2);
-    mps.setName("./output3/tst1_");
+    mps.setName("./output4/tst1_");
     std::cout<<"TST"<<std::endl;
     ex.exportPara("tst2.vtu", pcls);
     std::cout<<"TST"<<std::endl;
     mps.run();
-    */
     return 0;
 }
