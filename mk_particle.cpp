@@ -53,50 +53,50 @@ void MakeParticle::make_bar_ex(std::vector<std::unique_ptr<Particle>> &pcls, con
     double eps = 0.01 * pcl_dist;
     const bool OFF = false;
     const bool ON = true;
-    int iX, iY;
-    int nX, nY;
+    int iX, iZ;
+    int nX, nZ;
     double x, y, z;
     int i=0;
     bool flagOfParticleGeneration;
 
     nX = (int)(1.0 / pcl_dist) + 5;
-    nY = (int)(1.0 / pcl_dist) + 5;
+    nZ = (int)(1.0 / pcl_dist) + 5;
     for(iX = -4; iX < nX; iX++){
-        for(iY = -4; iY < nY; iY++){
+        for(iZ = -4; iZ < nZ; iZ++){
             x = pcl_dist * (double)iX;
-            y = pcl_dist * (double)iY;
-            z = 0.0;
+            z = pcl_dist * (double)iZ;
+            y = 0.0;
             int pcl_typ = Particle::GST;
             flagOfParticleGeneration = OFF;
 
             /*dummy wall region*/
             if(((x > -4.0*pcl_dist + eps) && (x <= 1.0 + 4.0*pcl_dist+ eps))
-             && ((y> 0.0 - 4.0*pcl_dist + eps) && (y <= 0.6 + eps))){
+             && ((z> 0.0 - 4.0*pcl_dist + eps) && (z <= 0.6 + eps))){
                 pcl_typ = Particle::DMY;
                 flagOfParticleGeneration = ON;
             }
 
             /*wall region*/
             if(((x > -2.0*pcl_dist + eps) && (x <= 1.0 + 2.0*pcl_dist + eps))
-             && ((y > 0.0 -2.0*pcl_dist + eps) && (y <= 0.6 + eps))){
+             && ((z > 0.0 -2.0*pcl_dist + eps) && (z <= 0.6 + eps))){
                  pcl_typ = Particle::WLL;
                  flagOfParticleGeneration = ON;
              }
             
             /*wall region*/
             if(((x > -4.0*pcl_dist + eps) && (x <= 1.0 + 4.0*pcl_dist + eps))
-             && ((y > 0.6 -2.0*pcl_dist + eps) && (y <= 0.6 + eps))){
+             && ((z > 0.6 -2.0*pcl_dist + eps) && (z <= 0.6 + eps))){
                  pcl_typ = Particle::WLL;
                  flagOfParticleGeneration = ON;
              }
             
             /*empty region*/
-            if(((x > 0.0 + eps) && (x <= 1.0 + eps)) && (y > 0.0 + eps)){
+            if(((x > 0.0 + eps) && (x <= 1.0 + eps)) && (z > 0.0 + eps)){
                 flagOfParticleGeneration = OFF;
             }
 
             /*fluid region*/
-            if(((x > 0.0 + eps) && (x <= 0.25 + eps)) && ((y > 0.0 + eps) && (y <= 0.5 + eps))){
+            if(((x > 0.0 + eps) && (x <= 0.25 + eps)) && ((z > 0.0 + eps) && (z <= 0.5 + eps))){
                 pcl_typ = Particle::FLD;
                 flagOfParticleGeneration = ON;
             }

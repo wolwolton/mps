@@ -16,7 +16,7 @@ Mps::Mps(std::vector<std::unique_ptr<Particle>> p)
  dx(0),
  dim(0),
  t(0),
- g(0.0d,-9.8d,0.0d),
+ g(0.0d,0.0d,-9.8d),
  n_0(0),
  lambda_0(0),
  re(0),
