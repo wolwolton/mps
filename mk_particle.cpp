@@ -3,9 +3,8 @@
 #include "mk_particle.h"
 #include "particle.h"
 
-void MakeParticle::make_bar(std::vector<std::unique_ptr<Particle> > &pcls){
+void MakeParticle::make_bar(std::vector<std::unique_ptr<Particle>> &pcls, const double pcl_dist){
     pcls.clear();
-    double pcl_dist = 0.025;
     for(int ix=0; ix<70; ix++){
         for(int iy=0; iy<1; iy++){
             for(int iz=0; iz<30; iz++){
@@ -39,6 +38,80 @@ void MakeParticle::make_bar(std::vector<std::unique_ptr<Particle> > &pcls){
                 }*/
                 pcls[ix*1*30+iy*30+iz]->typ=typ_tmp;
             }
+        }
+    }
+}
+
+void MakeParticle::make_bar(std::vector<std::unique_ptr<Particle>> &pcls){
+    double pcl_dist = 0.025;
+    make_bar(pcls, pcl_dist);
+}
+
+void MakeParticle::make_bar_ex(std::vector<std::unique_ptr<Particle>> &pcls, const double pcl_dist){
+    pcls.clear();
+
+    double eps = 0.01 * pcl_dist;
+    const bool OFF = false;
+    const bool ON = true;
+    int iX, iY;
+    int nX, nY;
+    double x, y, z;
+    int i=0;
+    bool flagOfParticleGeneration;
+
+    nX = (int)(1.0 / pcl_dist) + 5;
+    nY = (int)(1.0 / pcl_dist) + 5;
+    for(iX = -4; iX < nX; iX++){
+        for(iY = -4; iY < nY; iY++){
+            x = pcl_dist * (double)iX;
+            y = pcl_dist * (double)iY;
+            z = 0.0;
+            int pcl_typ = Particle::GST;
+            flagOfParticleGeneration = OFF;
+
+            /*dummy wall region*/
+            if(((x > -4.0*pcl_dist + eps) && (x <= 1.0 + 4.0*pcl_dist+ eps))
+             && ((y> 0.0 - 4.0*pcl_dist + eps) && (y <= 0.6 + eps))){
+                pcl_typ = Particle::DMY;
+                flagOfParticleGeneration = ON;
+            }
+
+            /*wall region*/
+            if(((x > -2.0*pcl_dist + eps) && (x <= 1.0 + 2.0*pcl_dist + eps))
+             && ((y > 0.0 -2.0*pcl_dist + eps) && (y <= 0.6 + eps))){
+                 pcl_typ = Particle::WLL;
+                 flagOfParticleGeneration = ON;
+             }
+            
+            /*wall region*/
+            if(((x > -4.0*pcl_dist + eps) && (x <= 1.0 + 4.0*pcl_dist + eps))
+             && ((y > 0.6 -2.0*pcl_dist + eps) && (y <= 0.6 + eps))){
+                 pcl_typ = Particle::WLL;
+                 flagOfParticleGeneration = ON;
+             }
+            
+            /*empty region*/
+            if(((x > 0.0 + eps) && (x <= 1.0 + eps)) && (y > 0.0 + eps)){
+                flagOfParticleGeneration = OFF;
+            }
+
+            /*fluid region*/
+            if(((x > 0.0 + eps) && (x <= 0.25 + eps)) && ((y > 0.0 + eps) && (y <= 0.5 + eps))){
+                pcl_typ = Particle::FLD;
+                flagOfParticleGeneration = ON;
+            }
+
+            if(flagOfParticleGeneration == ON){
+                std::unique_ptr<Particle> p(new Particle);
+                Eigen::Vector3d tmppos(x, y, z);
+                p->pos=tmppos;
+                p->acc=Eigen::Vector3d::Zero();
+                p->vel=Eigen::Vector3d::Zero();
+                p->prr=0;
+                p->typ=pcl_typ;
+                pcls.push_back(std::move(p));
+            }
+
         }
     }
 }

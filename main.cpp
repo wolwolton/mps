@@ -24,11 +24,12 @@ void tst(const std::vector<std::unique_ptr<const A>>& array){
 
 
 int main(){
+    double pcl_dist = 0.025;
     std::cout<<"TST"<<std::endl;
     std::vector<std::unique_ptr<Particle>> pcls;
     MakeParticle mk_pcls;
     std::cout<<"TST"<<std::endl;
-    mk_pcls.make_bar(pcls);
+    mk_pcls.make_bar_ex(pcls, pcl_dist);
     std::cout<<"TST"<<std::endl;
     /*
     std::vector<std::unique_ptr<A>> A_array;
@@ -54,9 +55,9 @@ int main(){
     std::cout<<"TST"<<std::endl;
     mps.setDt((double)1e-3);
     mps.setMaxTime((double)2);
-    mps.setDx((double)0.025);
+    mps.setDx(pcl_dist);
     mps.setDimension(2);
-    mps.setName("./output4/tst1_");
+    mps.setName("./output5/tst2_");
     std::cout<<"TST"<<std::endl;
     ex.exportPara("tst2.vtu", pcls);
     std::cout<<"TST"<<std::endl;
