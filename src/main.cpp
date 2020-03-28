@@ -7,24 +7,6 @@
 #include "export.h"
 #include <Eigen/Core>
 
-#include "mmm.h"
-
-/*
-class A{
-public:
-    bool flg;
-    int value;
-    A():flg(false), value(0){}
-};
-
-void tst(const std::vector<std::unique_ptr<const A>>& array){
-    for(auto &a: array){
-        //a->value++;
-        std::cout<<a->value << std::endl;
-    }
-}
-*/
-
 
 int main(){
     double pcl_dist = 0.025;
@@ -33,7 +15,6 @@ int main(){
     mk_pcls.make_bar_ex(pcls, pcl_dist);
     Export ex;
     ex.exportPara("tst1.vtu", pcls);
-    //mmm.make_bar_MMM_ex(pcls);
 
     Mps mps(std::move(pcls));
     
