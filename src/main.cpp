@@ -8,11 +8,6 @@
 #include "object.h"
 #include <Eigen/Core>
 
-class TST : public Object{
-    public:
-        TST():Object(ObjectType::body){};
-};
-
 int main(){
     double pcl_dist = 0.025;
     std::vector<std::unique_ptr<Particle>> pcls;
@@ -22,9 +17,6 @@ int main(){
     ex.exportPara("tst1.vtu", pcls);
 
     Environment env(std::move(pcls));
-    
-    TST t;
-    env.addObject(std::move(t));
     
     Mps mps(std::move(env));
     
