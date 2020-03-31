@@ -5,8 +5,13 @@
 #include "particle.h"
 #include "mk_particle.h"
 #include "export.h"
+#include "object.h"
 #include <Eigen/Core>
 
+class TST : public Object{
+    public:
+        TST():Object(ObjectType::body){};
+};
 
 int main(){
     double pcl_dist = 0.025;
@@ -18,8 +23,8 @@ int main(){
 
     Environment env(std::move(pcls));
     
-    Object ob1(ObjectType::body);
-    env.addObject(std::move(ob1));
+    TST t;
+    env.addObject(std::move(t));
     
     Mps mps(std::move(env));
     
