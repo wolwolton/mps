@@ -3,6 +3,7 @@
 #include <Eigen/Sparse>
 #include <iostream>
 #include <vector>
+#include "environment.h"
 #include "particle.h"
 #include "mk_particle.h"
 #include "export.h"
@@ -10,7 +11,7 @@
 class Mps{
     public:
         EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
-        Mps(std::vector<std::unique_ptr<Particle>> p);
+        Mps(Environment &&e);
         void run();
         void setDt(double t);
         void setMaxTime(double t);
@@ -39,7 +40,7 @@ class Mps{
         double e;
         double max_time;
         double dim;
-        std::vector<std::unique_ptr<Particle>> pcls;
+        Environment env;
         std::string filename;
         Export ex;
         double w(const Eigen::Vector3d &a, const Eigen::Vector3d &b);

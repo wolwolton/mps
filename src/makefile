@@ -1,13 +1,15 @@
 ../build/%.o:	%.cpp
 	g++ -Wall -c $*.cpp -I /usr/include/eigen3/ -Ofast -o ../build/$*.o
 
-main: ../build/main.o ../build/mps.o ../build/particle.o ../build/mk_particle.o ../build/export.o
-	g++ -Wall -o ../build/main ../build/main.o ../build/mps.o ../build/particle.o ../build/mk_particle.o ../build/export.o -Ofast
+main: ../build/main.o ../build/mps.o ../build/particle.o ../build/mk_particle.o ../build/export.o ../build/object.o	../build/environment.o
+	g++ -Wall -o ../build/main ../build/main.o ../build/mps.o ../build/particle.o ../build/mk_particle.o ../build/export.o ../build/object.o ../build/environment.o  -Ofast
 
 clean:
 	rm -rf ../build
 
 run:
+	rm -rf ../output
+	mkdir ../output
 	../build/main
 
 build:
