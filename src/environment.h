@@ -14,5 +14,7 @@ class Environment{
         Environment(std::vector<std::unique_ptr<Particle>> p);
         Environment();
         Environment(Environment &&rhs);
+        int addObject(Object &&rhs);
         std::vector<std::unique_ptr<Particle>> pcls;
+        std::vector<std::unique_ptr<Object>> objects;
 };

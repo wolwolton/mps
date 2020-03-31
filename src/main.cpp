@@ -15,7 +15,11 @@ int main(){
     mk_pcls.make_bar_ex(pcls, pcl_dist);
     Export ex;
     ex.exportPara("tst1.vtu", pcls);
+
     Environment env(std::move(pcls));
+    
+    Object ob1(ObjectType::body);
+    env.addObject(std::move(ob1));
     
     Mps mps(std::move(env));
     
