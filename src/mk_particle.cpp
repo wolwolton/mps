@@ -2,9 +2,10 @@
 #include <vector>
 #include "mk_particle.h"
 #include "particle.h"
+#include "environment.h"
 
-void MakeParticle::make_bar(std::vector<std::unique_ptr<Particle>> &pcls, const double pcl_dist){
-    pcls.clear();
+void MakeParticle::make_bar(Environment &env, const double pcl_dist){
+    env.pcls.clear();
     for(int ix=0; ix<70; ix++){
         for(int iy=0; iy<1; iy++){
             for(int iz=0; iz<30; iz++){
@@ -15,7 +16,7 @@ void MakeParticle::make_bar(std::vector<std::unique_ptr<Particle>> &pcls, const 
                 p1->acc=Eigen::Vector3d::Zero();
                 p1->vel=Eigen::Vector3d::Zero();
                 p1->prr=0;
-                pcls.push_back(std::move(p1));
+                env.pcls.push_back(std::move(p1));
             }
         }
     }
@@ -36,19 +37,19 @@ void MakeParticle::make_bar(std::vector<std::unique_ptr<Particle>> &pcls, const 
                 if(7<ix && ix < 10  && iz < 30){
                     typ_tmp = Particle::FLD;
                 }*/
-                pcls[ix*1*30+iy*30+iz]->typ=typ_tmp;
+                env.pcls[ix*1*30+iy*30+iz]->typ=typ_tmp;
             }
         }
     }
 }
 
-void MakeParticle::make_bar(std::vector<std::unique_ptr<Particle>> &pcls){
+void MakeParticle::make_bar(Environment &env){
     double pcl_dist = 0.025;
-    make_bar(pcls, pcl_dist);
+    make_bar(env, pcl_dist);
 }
 
-void MakeParticle::make_bar_ex(std::vector<std::unique_ptr<Particle>> &pcls, const double pcl_dist){
-    pcls.clear();
+void MakeParticle::make_bar_ex(Environment &env, const double pcl_dist){
+    env.pcls.clear();
 
     double eps = 0.01 * pcl_dist;
     const bool OFF = false;
@@ -109,7 +110,7 @@ void MakeParticle::make_bar_ex(std::vector<std::unique_ptr<Particle>> &pcls, con
                 p->vel=Eigen::Vector3d::Zero();
                 p->prr=0;
                 p->typ=pcl_typ;
-                pcls.push_back(std::move(p));
+                env.pcls.push_back(std::move(p));
             }
 
         }

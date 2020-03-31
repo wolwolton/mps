@@ -11,13 +11,15 @@
 int main(){
     double pcl_dist = 0.025;
     std::vector<std::unique_ptr<Particle>> pcls;
-    MakeParticle mk_pcls;
-    mk_pcls.make_bar_ex(pcls, pcl_dist);
-    Export ex;
-    ex.exportPara("tst1.vtu", pcls);
 
     Environment env(std::move(pcls));
     
+
+    MakeParticle mk_pcls;
+    mk_pcls.make_bar_ex(env, pcl_dist);
+    Export ex;
+    //ex.exportPara("tst1.vtu", pcls);
+
     Mps mps(std::move(env));
     
     std::cout<<"TST"<<std::endl;
