@@ -18,8 +18,8 @@ int main(){
     MakeParticle mk_pcls;
     mk_pcls.make_bar_ex(env, pcl_dist);
     Export ex;
-    //ex.exportPara("tst1.vtu", pcls);
-
+    ex.exportPara("tst_from_env.vtu", env);
+    /*
     Mps mps(std::move(env));
     
     std::cout<<"TST"<<std::endl;
@@ -33,5 +33,6 @@ int main(){
     ex.exportPara("tst2.vtu", pcls);
     std::cout<<"TST"<<std::endl;
     mps.run();
+    */
     return 0;
 }

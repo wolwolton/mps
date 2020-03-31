@@ -2,6 +2,7 @@
 #include <fstream>
 #include <memory>
 #include <vector>
+#include "environment.h"
 #include "particle.h"
 #include "export.h"
 
@@ -69,4 +70,12 @@ int Export::exportPara(const std::string name,int i, const std::vector<std::uniq
     std::string fname = name+std::to_string(i)+".vtu";
     std::cout<<fname<<std::endl;
     return exportPara(fname,pcls);
+}
+
+int Export::exportPara(const std::string name, Environment& env){
+    return exportPara(name, env.pcls);
+}
+
+int Export::exportPara(const std::string name, int i, Environment& env){
+    return exportPara(name, i, env.pcls);
 }
