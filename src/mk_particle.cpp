@@ -4,6 +4,7 @@
 #include "particle.h"
 #include "environment.h"
 
+using namespace MPS;
 void MakeParticle::make_bar(Environment &env, const double pcl_dist){
     env.pcls.clear();
     for(int ix=0; ix<70; ix++){

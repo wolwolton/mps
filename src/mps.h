@@ -8,6 +8,7 @@
 #include "mk_particle.h"
 #include "export.h"
 
+namespace MPS{
 class Mps{
     public:
         EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
@@ -66,4 +67,5 @@ class Mps{
         void fixParticlePosition();
         void calcPressure();
 };
+}
 

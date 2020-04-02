@@ -2,6 +2,8 @@
 #include <string>
 #include <Eigen/Core>
 
+namespace MPS{
+
 enum ObjectType {body, config};
 
 class Object{
@@ -13,3 +15,4 @@ class Object{
     protected:
         Eigen::Vector3d position;
 };
+}

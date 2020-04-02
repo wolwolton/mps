@@ -5,6 +5,7 @@
 #include "particle.h"
 #include "environment.h"
 
+namespace MPS{
 class MakeParticle
 {
     private:
@@ -13,3 +14,4 @@ class MakeParticle
         void make_bar(Environment &env, const double pcl_dist);
         void make_bar_ex(Environment &env, const double pcl_dist);
 };
+}

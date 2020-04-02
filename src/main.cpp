@@ -8,6 +8,8 @@
 #include "object.h"
 #include <Eigen/Core>
 
+using namespace MPS;
+
 int main(){
     double pcl_dist = 0.025;
     std::vector<std::unique_ptr<Particle>> pcls;

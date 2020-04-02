@@ -6,6 +6,7 @@
 #include "particle.h"
 #include "export.h"
 
+using namespace MPS;
 int Export::exportPara(const std::string name, const std::vector<std::unique_ptr<Particle>>& pcls){
     std::ofstream ofs(name);
     if (!ofs)

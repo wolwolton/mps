@@ -7,6 +7,7 @@
 #include "object.h"
 #include "particle.h"
 
+namespace MPS{
 class Environment{
     private:
     public:
@@ -18,3 +19,4 @@ class Environment{
         std::vector<std::unique_ptr<Particle>> pcls;
         std::vector<std::unique_ptr<Object>> objects;
 };
+}

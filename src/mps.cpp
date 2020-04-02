@@ -8,6 +8,7 @@
 #include "particle.h"
 #include "mps.h"
 
+using namespace MPS;
 Mps::Mps(Environment &&e)
 :env(std::move(e)),
  nu(1e-6),

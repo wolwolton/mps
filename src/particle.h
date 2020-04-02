@@ -2,6 +2,7 @@
 #include <vector>
 #include <Eigen/Core>
 
+namespace MPS{
 class Particle
 {
     private:
@@ -23,3 +24,4 @@ class Particle
 
 inline bool operator==(const Particle& lhs, const Particle& rhs){return (&lhs==&rhs); }
 inline bool operator!=(const Particle& lhs, const Particle& rhs){ return !(lhs == rhs); }
+}

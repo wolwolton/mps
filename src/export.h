@@ -5,6 +5,7 @@
 #include "particle.h"
 #include "environment.h"
 
+namespace MPS{
 class Export
 {
 public:
@@ -13,3 +14,4 @@ public:
     int exportPara(const std::string name, Environment& env);
     int exportPara(const std::string name, int i, Environment& env);
 };
+}

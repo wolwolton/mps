@@ -2,6 +2,7 @@
 #include <Eigen/Core>
 #include "object.h"
 
+using namespace MPS;
 Particle::Particle()
 :pos(Eigen::Vector3d::Zero()),
  vel(Eigen::Vector3d::Zero()),
@@ -21,5 +22,4 @@ Particle::Particle(const Particle& rhs)
  typ(rhs.typ),
  b_c(rhs.b_c)
 {
-
 }

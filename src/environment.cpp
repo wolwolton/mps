@@ -4,6 +4,7 @@
 #include "particle.h"
 #include "object.h"
 
+using namespace MPS;
 Environment::Environment(std::vector<std::unique_ptr<Particle>> p):
 pcls(std::move(p))
 {
