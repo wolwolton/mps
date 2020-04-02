@@ -14,7 +14,6 @@ int main(){
 
     Environment env(std::move(pcls));
     
-
     MakeParticle mk_pcls;
     mk_pcls.make_bar_ex(env, pcl_dist);
     
