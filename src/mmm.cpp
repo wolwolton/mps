@@ -1,15 +1,18 @@
 #include "mmm.h"
+#include "particle.h"
 #include <Eigen/Core>
+
+using namespace MPS;
 
 MMM::Particle::Particle():
 m_moment(Eigen::Vector3d::Zero()),
-Particle()
+MPS::Particle()
 {
 }
 
 MMM::Particle::Particle(const MMM::Particle& rhs):
 m_moment(rhs.m_moment),
-Particle(rhs)
+MPS::Particle(rhs)
 {
 }
 

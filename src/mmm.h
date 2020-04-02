@@ -2,6 +2,7 @@
 #include "environment.h"
 #include <Eigen/Core>
 #include "object.h"
+#include "mk_particle.h"
 
 namespace MPS{
 namespace MMM{
