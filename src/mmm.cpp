@@ -1,6 +1,8 @@
 #include "mmm.h"
 #include "particle.h"
+#include "object.h"
 #include <Eigen/Core>
+#include <functional>
 
 using namespace MPS;
 
@@ -16,6 +18,25 @@ MPS::Particle(rhs)
 {
 }
 
-void MMM::MakeParticle::make_ex(Environment &env){
+MMM::MagneticBody::MagneticBody():
+Bvector(),
+MPS::Object(body)
+{
+}
 
+MMM::MagneticBody::MagneticBody(const MMM::MagneticBody& rhs):
+Bvector(rhs.Bvector),
+MPS::Object(body)
+{
+}
+
+void MMM::MagneticBody::setMagneticFluxDensity(std::function<Eigen::Vector3d(double,Eigen::Vector3d)> f){
+    Bvector = f;
+}
+
+Eigen::Vector3d MMM::MagneticBody::getMagneticFluxDensity(double t){
+    return Bvector(t,position);
+}
+
+void MMM::MakeParticle::make_ex(Environment &env){
 }

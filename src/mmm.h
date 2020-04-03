@@ -1,6 +1,7 @@
 #include "particle.h"
 #include "environment.h"
 #include <Eigen/Core>
+#include <functional>
 #include "object.h"
 #include "mk_particle.h"
 
@@ -22,8 +23,10 @@ namespace MMM{
         public:
             MagneticBody();
             MagneticBody(const MagneticBody& rhs);
+            void setMagneticFluxDensity(std::function<Eigen::Vector3d(double,Eigen::Vector3d)> f);
+            Eigen::Vector3d getMagneticFluxDensity(double t);
         private:
-
+            std::function<Eigen::Vector3d(double,Eigen::Vector3d)> Bvector;
     };
 }
 }

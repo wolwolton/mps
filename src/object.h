@@ -10,9 +10,9 @@ class Object{
     public:
         Object(ObjectType ot);
         ObjectType getObejctType();
+        Eigen::Vector3d position;
     private:
         ObjectType objecttype;
     protected:
-        Eigen::Vector3d position;
 };
 }
