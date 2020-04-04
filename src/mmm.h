@@ -4,6 +4,7 @@
 #include <functional>
 #include "object.h"
 #include "mk_particle.h"
+#include "mps.h"
 
 namespace MPS{
 namespace MMM{
@@ -27,6 +28,11 @@ namespace MMM{
             Eigen::Vector3d getMagneticFluxDensity(double t);
         private:
             std::function<Eigen::Vector3d(double,Eigen::Vector3d)> Bvector;
+    };
+
+    class MMMSolver : public MPS::Mps{
+        public:
+            MMMSolver(MPS::Environment&& env);
     };
 }
 }

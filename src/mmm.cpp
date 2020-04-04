@@ -40,3 +40,9 @@ Eigen::Vector3d MMM::MagneticBody::getMagneticFluxDensity(double t){
 
 void MMM::MakeParticle::make_ex(Environment &env){
 }
+
+MMM::MMMSolver::MMMSolver(Environment &&env):
+Mps(std::move(env))
+{
+
+}
