@@ -349,18 +349,28 @@ void Mps::calcPressure(){
     std::cout << "success compute" << std::endl;
 }
 
+void Mps::setupLoop(){
+    
+}
+
+void Mps::mainLoop(){
+    calcGravity();
+    calcViscosity();
+    moveParticle();
+    collision();
+    calcPressure();
+}
+
+
 void Mps::run(){
     int i=0;
     int k=0;
     calcParameter();
+    setupLoop();
     ex.exportPara(filename,k, env.pcls);
     k++;
     while(t<max_time){
-        calcGravity();
-        calcViscosity();
-        moveParticle();
-        collision();
-        calcPressure();
+        mainLoop();
         if(i%20==0){
             ex.exportPara(filename,k, env.pcls);
             k++;

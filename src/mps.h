@@ -20,7 +20,7 @@ class Mps{
         void setDimension(int d);
         void setName(std::string name);
         void setCOR(double e_in);
-    private:
+    protected:
         const static int INER_FLD = 0;
         const static int OUTR_FLD = 1;
         const static int GST_DMY  = -1;
@@ -66,6 +66,8 @@ class Mps{
         void calcPressureGrad();
         void fixParticlePosition();
         void calcPressure();
+        virtual void mainLoop();
+        virtual void setupLoop();
 };
 }
 
