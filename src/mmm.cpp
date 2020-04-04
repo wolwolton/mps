@@ -46,3 +46,11 @@ Mps(std::move(env))
 {
 
 }
+
+void MMM::MMMSolver::mainLoop(){
+    calcGravity();
+    calcViscosity();
+    moveParticle();
+    collision();
+    calcPressure();
+}

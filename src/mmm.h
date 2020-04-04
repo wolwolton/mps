@@ -33,6 +33,8 @@ namespace MMM{
     class MMMSolver : public MPS::Mps{
         public:
             MMMSolver(MPS::Environment&& env);
+        private:
+            void mainLoop();
     };
 }
 }

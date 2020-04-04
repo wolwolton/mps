@@ -7,6 +7,7 @@
 #include "export.h"
 #include "object.h"
 #include <Eigen/Core>
+#include "mmm.h"
 
 using namespace MPS;
 
@@ -19,8 +20,10 @@ int main(){
     MakeParticle mk_pcls;
     mk_pcls.make_bar_ex(env, pcl_dist);
     
-    Mps mps(std::move(env));
-    
+    //Mps mps(std::move(env));
+    MMM::MMMSolver mps(std::move(env));
+
+
     std::cout<<"TST"<<std::endl;
     mps.setDt(1e-3);
     mps.setMaxTime(2);
